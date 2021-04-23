@@ -1,0 +1,19 @@
+error: multiple strategies are not allowed
+ --> $DIR/04-multiple-strategy.rs:8:34
+  |
+8 | #[proptest(strategy = "0..10u8", strategy = "5..10u8")]
+  |                                  ^^^^^^^^^^^^^^^^^^^^
+
+error[E0425]: cannot find function `basic_test` in this scope
+ --> $DIR/04-multiple-strategy.rs:5:5
+  |
+5 |     basic_test();
+  |     ^^^^^^^^^^ not found in this scope
+
+warning: unused import: `proptest::prelude::*`
+ --> $DIR/04-multiple-strategy.rs:1:5
+  |
+1 | use proptest::prelude::*;
+  |     ^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default

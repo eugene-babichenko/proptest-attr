@@ -1,0 +1,19 @@
+error: unknown argument
+ --> $DIR/06-unknown-argument-2.rs:8:12
+  |
+8 | #[proptest(asdf)]
+  |            ^^^^
+
+error[E0425]: cannot find function `basic_test` in this scope
+ --> $DIR/06-unknown-argument-2.rs:5:5
+  |
+5 |     basic_test();
+  |     ^^^^^^^^^^ not found in this scope
+
+warning: unused import: `proptest::prelude::*`
+ --> $DIR/06-unknown-argument-2.rs:1:5
+  |
+1 | use proptest::prelude::*;
+  |     ^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default

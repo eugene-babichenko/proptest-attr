@@ -1,0 +1,19 @@
+error: invalid strategy: must be a string literal
+ --> $DIR/08-strategy-wrong-literal.rs:8:23
+  |
+8 | #[proptest(strategy = 42)]
+  |                       ^^
+
+error[E0425]: cannot find function `basic_test` in this scope
+ --> $DIR/08-strategy-wrong-literal.rs:5:5
+  |
+5 |     basic_test();
+  |     ^^^^^^^^^^ not found in this scope
+
+warning: unused import: `proptest::prelude::*`
+ --> $DIR/08-strategy-wrong-literal.rs:1:5
+  |
+1 | use proptest::prelude::*;
+  |     ^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default

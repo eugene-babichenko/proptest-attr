@@ -1,0 +1,13 @@
+error: no strategy specified for this proptest
+ --> $DIR/03-no-strategy.rs:7:1
+  |
+7 | #[proptest]
+  | ^^^^^^^^^^^
+  |
+  = note: this error originates in an attribute macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0425]: cannot find function `basic_test` in this scope
+ --> $DIR/03-no-strategy.rs:4:5
+  |
+4 |     basic_test();
+  |     ^^^^^^^^^^ not found in this scope

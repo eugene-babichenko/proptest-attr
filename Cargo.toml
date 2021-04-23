@@ -1,0 +1,23 @@
+[package]
+name = "proptest-attr"
+version = "0.1.0"
+authors = ["Yevhenii Babichenko <eugene.babichenko@protonmail.com>"]
+edition = "2018"
+description = "An attribute-style replacement for proptest macro"
+repository = "https://github.com/eugene-babichenko/proptest-attr"
+homepage = "https://github.com/eugene-babichenko/proptest-attr"
+readme = "README.md"
+license = "MIT"
+keywords = ["property", "testing", "quickcheck", "fuzz", "hypothesis", "attribute", "macro", "proc_macro"]
+categories = ["development-tools::testing"]
+
+[lib]
+proc-macro = true
+
+[dependencies]
+quote = "1.0"
+syn = { version = "1.0.70",  features = ["full"] }
+
+[dev-dependencies]
+trybuild = "1.0"
+proptest = "1.0" # required for building compile-test cases

@@ -1,0 +1,19 @@
+error: unknown argument
+ --> $DIR/05-unknown-argument.rs:8:12
+  |
+8 | #[proptest(helloworld = "abc")]
+  |            ^^^^^^^^^^^^^^^^^^
+
+error[E0425]: cannot find function `basic_test` in this scope
+ --> $DIR/05-unknown-argument.rs:5:5
+  |
+5 |     basic_test();
+  |     ^^^^^^^^^^ not found in this scope
+
+warning: unused import: `proptest::prelude::*`
+ --> $DIR/05-unknown-argument.rs:1:5
+  |
+1 | use proptest::prelude::*;
+  |     ^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default

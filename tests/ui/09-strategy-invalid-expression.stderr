@@ -1,0 +1,5 @@
+error[E0425]: cannot find function `hello_world` in this scope
+ --> $DIR/09-strategy-invalid-expression.rs:8:23
+  |
+8 | #[proptest(strategy = "hello_world()")]
+  |                       ^^^^^^^^^^^^^^^ not found in this scope

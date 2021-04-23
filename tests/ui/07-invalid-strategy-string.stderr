@@ -1,0 +1,27 @@
+error: unknown start of token: \
+ --> $DIR/07-invalid-strategy-string.rs:8:1
+  |
+8 | #[proptest(strategy = "123\\sdfq;;@")]
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: this error originates in an attribute macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: strategy is not a valid Rust expression: unexpected token
+ --> $DIR/07-invalid-strategy-string.rs:8:23
+  |
+8 | #[proptest(strategy = "123\\sdfq;;@")]
+  |                       ^^^^^^^^^^^^^^
+
+error[E0425]: cannot find function `basic_test` in this scope
+ --> $DIR/07-invalid-strategy-string.rs:5:5
+  |
+5 |     basic_test();
+  |     ^^^^^^^^^^ not found in this scope
+
+warning: unused import: `proptest::prelude::*`
+ --> $DIR/07-invalid-strategy-string.rs:1:5
+  |
+1 | use proptest::prelude::*;
+  |     ^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
