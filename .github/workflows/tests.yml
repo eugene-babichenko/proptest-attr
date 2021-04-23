@@ -22,7 +22,9 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: install
-          args: cargo-sync-readme
+          # building in debug mode is faster and we are not concerned about the
+          # the duration of `cargo sync-readme` since it is less than 1 second.
+          args: cargo-sync-readme --debug
 
       - name: Check that README.md is in sync
         run: |
