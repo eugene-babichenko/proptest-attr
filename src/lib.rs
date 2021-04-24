@@ -192,7 +192,7 @@ pub fn proptest(args: TokenStream, input: TokenStream) -> TokenStream {
     };
 
     let inner_output = input.sig.output;
-    let inner_stmts = input.block.stmts;
+    let inner_block = input.block;
 
     let output = quote! {
         #(#attrs)*
@@ -200,9 +200,7 @@ pub fn proptest(args: TokenStream, input: TokenStream) -> TokenStream {
             let strategy = #strategy;
             let runner_settings = ::core::default::Default::default();
             let mut runner = ::proptest::test_runner::TestRunner::new(runner_settings);
-            let result = runner.run(&strategy, |#inner_inputs| #inner_output {
-                #(#inner_stmts)*
-            });
+            let result = runner.run(&strategy, |#inner_inputs| #inner_output #inner_block);
             result.unwrap();
         }
     };
