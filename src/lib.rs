@@ -180,7 +180,7 @@ pub fn proptest(args: TokenStream, input: TokenStream) -> TokenStream {
         }
     }
 
-    let inner_inputs = if inner_inputs_pats.len() == 0 {
+    let inner_inputs = if inner_inputs_pats.is_empty() {
         quote! {}
     } else if inner_inputs_pats.len() == 1 {
         let pat = inner_inputs_pats[0].clone();
