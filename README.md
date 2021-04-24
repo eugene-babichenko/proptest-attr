@@ -30,6 +30,21 @@ Note a few things here:
   enclosed in quotes.
 * The test function takes the value type produced by `Strategy` and returns `TestCaseResult`.
 
+Compare this to the default `proptest! {}`:
+
+```rust
+use proptest::prelude::*;
+
+proptest! {
+    fn example_test(value in 0..=10u8) {
+        // do your tests...
+    }
+}
+```
+
+While the latter is less verbose, it is not valid Rust code, which complicates integration with
+the development tools or makes it impossible at all depending on a tool.
+
 ## `no_std` support
 
 Aside from `proptest` this macro only uses the `core` library. When `proptest` is configured
