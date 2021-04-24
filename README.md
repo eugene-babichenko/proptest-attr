@@ -45,6 +45,37 @@ proptest! {
 While the latter is less verbose, it is not valid Rust code, which complicates integration with
 the development tools or makes it impossible at all depending on a tool.
 
+### Multiple values
+
+The following `proptest! {}` invocaton:
+
+```rust
+use proptest::prelude::*;
+
+proptest! {
+    fn example_test(a in 0..=10u8, b in 10..100u32) {
+        // do your tests...
+    }
+}
+```
+
+Will be converted to the following code:
+
+```rust
+use proptest::prelude::*;
+use proptest_attr::proptest;
+
+#[proptest(strategy = "(0..=10u8, 10..100u32")]
+#[test]
+fn example_test(a: u8, b: u32) -> prop::test_runner::TestCaseResult {
+    // do your tests...
+    Ok(())
+}
+```
+
+Note that while you are able to specify multiple arguments to your test function, you are
+required to define strategy as a tuple of respective arguments for such case.
+
 ## `no_std` support
 
 Aside from `proptest` this macro only uses the `core` library. When `proptest` is configured

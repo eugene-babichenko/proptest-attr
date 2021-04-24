@@ -10,4 +10,5 @@ fn compile_tests() {
     t.compile_fail("tests/ui/07-invalid-strategy-string.rs");
     t.compile_fail("tests/ui/08-strategy-wrong-literal.rs");
     t.compile_fail("tests/ui/09-strategy-invalid-expression.rs");
+    t.pass("tests/ui/10-valid-example-mut-pattern.rs");
 }

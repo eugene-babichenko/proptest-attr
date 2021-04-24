@@ -41,6 +41,37 @@
 //! While the latter is less verbose, it is not valid Rust code, which complicates integration with
 //! the development tools or makes it impossible at all depending on a tool.
 //!
+//! ### Multiple values
+//!
+//! The following `proptest! {}` invocaton:
+//!
+//! ```rust
+//! use proptest::prelude::*;
+//!
+//! proptest! {
+//!     fn example_test(a in 0..=10u8, b in 10..100u32) {
+//!         // do your tests...
+//!     }
+//! }
+//! ```
+//!
+//! Will be converted to the following code:
+//!
+//! ```rust
+//! use proptest::prelude::*;
+//! use proptest_attr::proptest;
+//!
+//! #[proptest(strategy = "(0..=10u8, 10..100u32")]
+//! #[test]
+//! fn example_test(a: u8, b: u32) -> prop::test_runner::TestCaseResult {
+//!     // do your tests...
+//!     Ok(())
+//! }
+//! ```
+//!
+//! Note that while you are able to specify multiple arguments to your test function, you are
+//! required to define strategy as a tuple of respective arguments for such case.
+//!
 //! ## `no_std` support
 //!
 //! Aside from `proptest` this macro only uses the `core` library. When `proptest` is configured
@@ -53,8 +84,8 @@ extern crate proc_macro;
 use proc_macro::TokenStream;
 use quote::{quote, quote_spanned};
 use syn::{
-    parse_macro_input, punctuated::Punctuated, AttributeArgs, Error, Expr, ItemFn, Lit, Meta,
-    MetaNameValue, NestedMeta, ReturnType, Signature,
+    parse_macro_input, punctuated::Punctuated, AttributeArgs, Error, Expr, FnArg, ItemFn, Lit,
+    Meta, MetaNameValue, NestedMeta, PatType, ReturnType, Signature,
 };
 
 #[proc_macro_attribute]
@@ -121,7 +152,44 @@ pub fn proptest(args: TokenStream, input: TokenStream) -> TokenStream {
         ..input.sig
     };
 
-    let inner_inputs = input.sig.inputs;
+    // Convert multiple inputs to a tuple for use in the test runner
+    let mut inner_inputs_pats = Vec::new();
+    let mut inner_inputs_types = Vec::new();
+    for arg in input.sig.inputs.into_iter() {
+        if let FnArg::Typed(PatType { attrs, pat, ty, .. }) = &arg {
+            // We need to collect arguments into a tuple pattern, and patterns do not allow to use
+            // attributes.
+            if !attrs.is_empty() {
+                return Error::new_spanned(
+                    attrs[0].clone(),
+                    "proptest-attr does not allow to have attributes for function arguments",
+                )
+                .into_compile_error()
+                .into();
+            }
+
+            inner_inputs_pats.push(pat.clone());
+            inner_inputs_types.push(ty.clone());
+        } else {
+            return Error::new_spanned(
+                arg,
+                "receiver arguments are invalid in the testing context",
+            )
+            .into_compile_error()
+            .into();
+        }
+    }
+
+    let inner_inputs = if inner_inputs_pats.len() == 0 {
+        quote! {}
+    } else if inner_inputs_pats.len() == 1 {
+        let pat = inner_inputs_pats[0].clone();
+        let ty = inner_inputs_types[0].clone();
+        quote! { #pat: #ty }
+    } else {
+        quote! { ( #(#inner_inputs_pats),* ): ( #(#inner_inputs_types),* ) }
+    };
+
     let inner_output = input.sig.output;
     let inner_stmts = input.block.stmts;
 

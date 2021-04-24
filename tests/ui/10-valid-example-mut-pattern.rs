@@ -6,7 +6,7 @@ fn main() {
 }
 
 #[proptest(strategy = "(0..10u8, 10..100u32)")]
-fn basic_test(a: u8, b: u32) -> Result<(), TestCaseError> {
-    let _c = a as u32 + b;
+fn basic_test(a: u8, mut _b: u32) -> Result<(), TestCaseError> {
+    _b += a as u32;
     Ok(())
 }
