@@ -16,7 +16,6 @@ use proptest::prelude::*;
 use proptest_attr::proptest;
 
 #[proptest(strategy = "0..=10u8")]
-#[test]
 fn example_test(value: u8) -> prop::test_runner::TestCaseResult {
     // do your tests...
     Ok(())
@@ -66,7 +65,6 @@ use proptest::prelude::*;
 use proptest_attr::proptest;
 
 #[proptest(strategy = "(0..=10u8, 10..100u32)")]
-#[test]
 fn example_test(a: u8, b: u32) -> prop::test_runner::TestCaseResult {
     // do your tests...
     Ok(())
