@@ -104,27 +104,27 @@ pub fn proptest(args: TokenStream, input: TokenStream) -> TokenStream {
                                 strategy_str,
                                 format!("strategy is not a valid Rust expression: {}", err),
                             )
-                            .into_compile_error()
+                            .to_compile_error()
                             .into()
                         }
                     };
                 } else {
                     return Error::new_spanned(lit, "invalid strategy: must be a string literal")
-                        .into_compile_error()
+                        .to_compile_error()
                         .into();
                 }
             } else if maybe_strategy.is_some() {
                 return Error::new_spanned(arg, "multiple strategies are not allowed")
-                    .into_compile_error()
+                    .to_compile_error()
                     .into();
             } else {
                 return Error::new_spanned(arg, "unknown argument")
-                    .into_compile_error()
+                    .to_compile_error()
                     .into();
             }
         } else {
             return Error::new_spanned(arg, "unknown argument")
-                .into_compile_error()
+                .to_compile_error()
                 .into();
         }
     }
@@ -163,7 +163,7 @@ pub fn proptest(args: TokenStream, input: TokenStream) -> TokenStream {
                     &attrs[0],
                     "proptest-attr does not allow to have attributes for function arguments",
                 )
-                .into_compile_error()
+                .to_compile_error()
                 .into();
             }
 
@@ -174,7 +174,7 @@ pub fn proptest(args: TokenStream, input: TokenStream) -> TokenStream {
                 arg_span,
                 "receiver arguments are invalid in the testing context",
             )
-            .into_compile_error()
+            .to_compile_error()
             .into();
         }
     }
