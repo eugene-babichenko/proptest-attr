@@ -84,8 +84,8 @@ extern crate proc_macro;
 use proc_macro::TokenStream;
 use quote::{quote, quote_spanned};
 use syn::{
-    parse_macro_input, punctuated::Punctuated, AttributeArgs, Error, Expr, FnArg, ItemFn, Lit,
-    Meta, MetaNameValue, NestedMeta, PatType, ReturnType, Signature,
+    parse_macro_input, punctuated::Punctuated, spanned::Spanned, AttributeArgs, Error, Expr, FnArg,
+    ItemFn, Lit, Meta, MetaNameValue, NestedMeta, PatType, ReturnType, Signature,
 };
 
 #[proc_macro_attribute]
@@ -156,23 +156,24 @@ pub fn proptest(args: TokenStream, input: TokenStream) -> TokenStream {
     let mut inner_inputs_pats = Vec::new();
     let mut inner_inputs_types = Vec::new();
     for arg in input.sig.inputs.into_iter() {
-        if let FnArg::Typed(PatType { attrs, pat, ty, .. }) = &arg {
+        let arg_span = arg.span();
+        if let FnArg::Typed(PatType { attrs, pat, ty, .. }) = arg {
             // We need to collect arguments into a tuple pattern, and patterns do not allow to use
             // attributes.
             if !attrs.is_empty() {
                 return Error::new_spanned(
-                    attrs[0].clone(),
+                    &attrs[0],
                     "proptest-attr does not allow to have attributes for function arguments",
                 )
                 .into_compile_error()
                 .into();
             }
 
-            inner_inputs_pats.push(pat.clone());
-            inner_inputs_types.push(ty.clone());
+            inner_inputs_pats.push(pat);
+            inner_inputs_types.push(ty);
         } else {
-            return Error::new_spanned(
-                arg,
+            return Error::new(
+                arg_span,
                 "receiver arguments are invalid in the testing context",
             )
             .into_compile_error()
@@ -183,8 +184,8 @@ pub fn proptest(args: TokenStream, input: TokenStream) -> TokenStream {
     let inner_inputs = if inner_inputs_pats.is_empty() {
         quote! {}
     } else if inner_inputs_pats.len() == 1 {
-        let pat = inner_inputs_pats[0].clone();
-        let ty = inner_inputs_types[0].clone();
+        let pat = &inner_inputs_pats[0];
+        let ty = &inner_inputs_types[0];
         quote! { #pat: #ty }
     } else {
         quote! { ( #(#inner_inputs_pats),* ): ( #(#inner_inputs_types),* ) }
