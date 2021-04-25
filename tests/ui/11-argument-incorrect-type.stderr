@@ -1,0 +1,9 @@
+error[E0631]: type mismatch in closure arguments
+ --> $DIR/11-argument-incorrect-type.rs:8:1
+  |
+8 | #[proptest(strategy = "0..10u8")]
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected signature of `fn(u8) -> _`
+9 | fn basic_test(_value: u32) -> Result<(), TestCaseError> {
+  | ------------------------------------------------------- found signature of `fn(u32) -> _`
+  |
+  = note: this error originates in an attribute macro (in Nightly builds, run with -Z macro-backtrace for more info)

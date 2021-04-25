@@ -142,6 +142,8 @@ pub fn proptest(args: TokenStream, input: TokenStream) -> TokenStream {
     let attrs = input.attrs;
     let vis = input.vis;
 
+    let signature_span = input.sig.span();
+
     // Make a signature for the test function
     let test_function_signature = Signature {
         // No inputs or outputs in test functions
@@ -192,6 +194,8 @@ pub fn proptest(args: TokenStream, input: TokenStream) -> TokenStream {
     let inner_output = input.sig.output;
     let inner_block = input.block;
 
+    let inner_signature = quote_spanned!(signature_span=> |#inner_inputs| #inner_output);
+
     let output = quote! {
         #(#attrs)*
         #[cfg_attr(not(trybuild), test)]
@@ -199,7 +203,7 @@ pub fn proptest(args: TokenStream, input: TokenStream) -> TokenStream {
             let strategy = #strategy;
             let runner_settings = ::core::default::Default::default();
             let mut runner = ::proptest::test_runner::TestRunner::new(runner_settings);
-            let result = runner.run(&strategy, |#inner_inputs| #inner_output #inner_block);
+            let result = runner.run(&strategy, #inner_signature #inner_block);
             result.unwrap();
         }
     };
